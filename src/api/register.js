@@ -9,28 +9,27 @@ const router = express.Router()
 router.post(
   '/register',
   asyncHandler(async (req, res) => {
-    const { name, address, teacher, email, password } = req.body
+    const { username, phone, email, password } = req.body
     const alreadyExist = await User.findOne({ email })
     if (alreadyExist) {
       return res
         .status(409)
         .json({ status: 'error', error: 'email already in use' })
     } else {
-      const user = await User.create({
-        name,
-        address,
-        teacher,
+      let user = await User.create({
+        username,
+        phone,
         email,
         password,
       })
       if (user) {
-        const codee = Math.floor(Math.random() * 9999 + 999)
+        let codee = Math.floor(Math.random() * 9999 + 999)
         codee = String(codee)
         codee = codee.substring(0, 4)
         const transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
-            user: 'zigza@gmail.com',
+            user: 'zigzaapp@gmail.com',
             pass: 'Zigzaapp@2117',
           },
         })
@@ -66,14 +65,12 @@ router.post(
   })
 )
 
-router.get(
+router.post(
   '/confirmation',
   protect,
   asyncHandler(async (req, res) => {
     const { code } = req.body
-    const { _id } = req.user
-    const user = await User.findById(_id)
-
+    const user = await User.findById(req.user._id)
     if (user.code === code) {
       user.confirmation = true
       await user.save()

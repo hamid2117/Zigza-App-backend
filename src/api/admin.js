@@ -123,7 +123,7 @@ router.put(
   '/edituser/:id',
   protect,
   asyncHandler(async (req, res) => {
-    console.log(req.params.id)
+    // console.log(req.params.id)
     const user = await Users.findById(req.params.id)
     if (user) {
       user.firstName = req.body.firstName || user.firstName

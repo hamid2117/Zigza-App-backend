@@ -17,8 +17,11 @@ router.post(
     // .catch((err) => {
     //   console.log('Error: ', err)
     // })
-
     if (!user) return res.status(404).json({ message: 'Email is not found !' })
+
+    if (user && user.confirmation === false) {
+      return res.status(409).json({ message: 'Please confirm your email .' })
+    }
 
     if (user && password && (await user.matchPassword(password))) {
       res.json({
