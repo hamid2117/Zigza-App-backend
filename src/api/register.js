@@ -65,6 +65,10 @@ router.post(
   })
 )
 
+//*@desc confirmation of email
+//*@Api GET /api/v1/confirmation
+//*@Access Private (means need token)
+
 router.post(
   '/confirmation',
   protect,
@@ -75,6 +79,8 @@ router.post(
       user.confirmation = true
       await user.save()
       return res.status(202).json({ message: 'Verified' })
+    } else {
+      return res.status(400).json({ message: 'Code is not correct' })
     }
   })
 )
