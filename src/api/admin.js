@@ -76,8 +76,6 @@ router.get(
 
 router.post(
   '/useradmin',
-  protect,
-  admin,
   asyncHandler(async (req, res) => {
     const { username, email, phone, password } = req.body
     const phonee = await Users.findOne({ email })
