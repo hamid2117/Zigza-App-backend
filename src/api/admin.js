@@ -7,8 +7,6 @@ const router = express.Router()
 
 router.get(
   '/image/:path',
-  // protect,
-  // admin,
   asyncHandler(async (req, res) => {
     console.log(req.params.path)
     res.download('./public/' + req.params.path)
@@ -77,33 +75,22 @@ router.get(
 //*@Access Admin
 
 router.post(
-  '/user',
+  '/useradmin',
+  protect,
+  admin,
   asyncHandler(async (req, res) => {
-    const {
-      firstName,
-      secondName,
-      email,
-      birthday,
-      pin,
-      number,
-      city,
-      gender,
-    } = req.body
-    const phonee = await Users.findOne({ number })
+    const { username, email, phone, password } = req.body
+    const phonee = await Users.findOne({ email })
 
     if (phonee) {
-      return res.status(400).json({ message: 'Phone is already exist' })
+      return res.status(400).json({ message: 'email is already exist' })
     }
 
     const user = new Users({
-      firstName,
-      secondName,
+      username,
       email,
-      birthday,
-      pin,
-      number,
-      city,
-      gender,
+      phone,
+      password,
     })
 
     const createdUser = await user.save()
@@ -126,14 +113,9 @@ router.put(
     // console.log(req.params.id)
     const user = await Users.findById(req.params.id)
     if (user) {
-      user.firstName = req.body.firstName || user.firstName
-      user.secondName = req.body.secondName || user.secondName
+      user.username = req.body.username || user.username
       user.email = req.body.email || user.email
-      user.birthday = req.body.birthday || user.birthday
-      user.pin = req.body.pin || user.pin
-      user.number = req.body.number || user.number
-      user.city = req.body.city || user.city
-      user.gender = req.body.gender || user.gender
+      user.phone = req.body.phone || user.phone
 
       const updatedUser = await user.save()
       res.status(200).json(updatedUser)
